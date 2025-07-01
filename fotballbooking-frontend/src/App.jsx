@@ -6,6 +6,7 @@ import OwnerLogin from './pages/OwnerLogin'
 import OwnerRegister from './pages/OwnerRegister'
 import TenantBooking from './pages/TenantBooking'
 import Login from './pages/Login'
+import Register from './pages/Register'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/owner/register" element={<OwnerRegister />} />
         <Route path="/book" element={<TenantBooking />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </div>
   )
