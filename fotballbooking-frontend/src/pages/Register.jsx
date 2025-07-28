@@ -1,15 +1,37 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ← LEGG TIL DETTE
 
 function Register() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+    const navigate = useNavigate() // ← LEGG TIL DETTE
 
-  const handleRegister = (e) => {
-    e.preventDefault()
-    alert(`Registrerer: ${name} (${email})`)
-    // TODO: Legg til registreringslogikk
+  const handleRegister = async (e) => {
+  e.preventDefault()
+
+  try {
+    const res = await fetch('http://localhost:5000/api/users/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, phone }),
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      alert('Bruker registrert med ID: ' + data.userId)
+      navigate("/login") // ← SEND VIDERE TIL LOGIN-SIDEN
+    } else {
+      alert('Feil: ' + data.error)
+    }
+  } catch (error) {
+    console.error('Nettverksfeil:', error)
+    alert('Noe gikk galt ved registrering')
   }
+}
+
 
   return (
     <div className="container mt-4">
@@ -45,10 +67,23 @@ function Register() {
             required
           />
         </div>
-        <button type="submit" className="btn btn-success">Registrer</button>
+        <div className="mb-3">
+          <label className="form-label">Telefon</label>
+          <input
+            type="text"
+            className="form-control"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-success">
+          Registrer
+        </button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;
