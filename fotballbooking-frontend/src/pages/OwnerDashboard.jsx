@@ -1,16 +1,36 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
 function OwnerDashboard() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [pitches, setPitches] = useState([])
   const [formData, setFormData] = useState({
     name: '',
     size: '',
     location: '',
     availableTimes: '',
-    availableDates: ''
+    availableDates: '',
   })
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const navigate = useNavigate()
+
+  // 🔐 Sjekk om bruker er logget inn (token i localStorage)
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    const user = localStorage.getItem('user')
+
+    if (token && user) {
+      const parsedUser = JSON.parse(user)
+      if (parsedUser.role === 'owner') {
+        setIsLoggedIn(true)
+      } else {
+        alert('Kun baneiere har tilgang.')
+        navigate('/')
+      }
+    } else {
+      setIsLoggedIn(false)
+    }
+  }, [navigate])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -23,7 +43,7 @@ function OwnerDashboard() {
       ...formData,
       id: Date.now(),
       availableTimes: formData.availableTimes.split(',').map(t => t.trim()),
-      availableDates: formData.availableDates.split(',').map(d => d.trim())
+      availableDates: formData.availableDates.split(',').map(d => d.trim()),
     }
     setPitches([...pitches, newPitch])
     setFormData({
@@ -31,29 +51,23 @@ function OwnerDashboard() {
       size: '',
       location: '',
       availableTimes: '',
-      availableDates: ''
+      availableDates: '',
     })
   }
 
   if (!isLoggedIn) {
     return (
-      <div>
-        <h2>Velkommen, eier</h2>
-        <p>Velg et alternativ:</p>
-        <Link className="btn btn-primary me-3" to="/owner/login">Logg inn</Link>
-        <Link className="btn btn-success" to="/owner/register">Registrer deg</Link>
-        <hr />
-        <button className="btn btn-secondary mt-3" onClick={() => setIsLoggedIn(true)}>
-          Midlertidig logg inn (for testing)
-        </button>
-        
+      <div className="container mt-5">
+        <h2>Ikke logget inn</h2>
+        <p>Du må være logget inn som baneier for å se dette panelet.</p>
+        <Link className="btn btn-primary" to="/owner/login">Gå til innlogging</Link>
       </div>
     )
   }
 
   return (
-    <div>
-      <h2>Eierpanel</h2>
+    <div className="container">
+      <h2 className="mb-4">Eierpanel</h2>
 
       {/* Skjema for å legge til ny bane */}
       <form onSubmit={handleAddPitch} className="mb-4">
@@ -116,7 +130,6 @@ function OwnerDashboard() {
 
       {/* Liste over baner */}
       <h4>Mine baner</h4>
-      <Link className="btn btn-info me-3" to="/owner/mypitches">Mine baner</Link>
       {pitches.length > 0 ? (
         pitches.map(pitch => (
           <div key={pitch.id} className="card mb-3">
@@ -139,4 +152,5 @@ function OwnerDashboard() {
 }
 
 export default OwnerDashboard
+
 

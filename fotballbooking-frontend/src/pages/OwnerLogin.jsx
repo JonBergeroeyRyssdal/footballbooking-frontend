@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function OwnerLogin() {
   const [formData, setFormData] = useState({
@@ -6,24 +7,43 @@ function OwnerLogin() {
     password: '',
   })
 
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Senere: send `formData` til backend
-    console.log('Prøver å logge inn med:', formData)
-    alert('Innlogging simulert!')
+    try {
+      const res = await fetch('http://localhost:5000/api/owners/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+        alert('Innlogging vellykket!')
+        navigate('/owner/dashboard') // Endre til ønsket rute etter innlogging
+      } else {
+        alert(data.message || 'Innlogging feilet.')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Feil ved tilkobling til server.')
+    }
   }
 
   return (
     <div className="container">
       <h2 className="mb-4">Logg inn som baneier</h2>
       <form onSubmit={handleSubmit}>
-        {/* E-post */}
         <div className="mb-3">
           <label className="form-label">E-post</label>
           <input
@@ -36,7 +56,6 @@ function OwnerLogin() {
           />
         </div>
 
-        {/* Passord */}
         <div className="mb-3">
           <label className="form-label">Passord</label>
           <input

@@ -1,46 +1,49 @@
-// src/pages/Login.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function Login() {
+function AdminLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Starter innlogging…')
 
     try {
       const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       })
 
       const data = await res.json()
-      console.log('Svar fra backend:', data)
-      console.log('res.ok:', res.ok)
-      console.log('data.token:', data.token)
 
-      if (res.ok && data.token && data.user) {
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('user', JSON.stringify(data.user))
-        console.log('Token og bruker lagret')
-        navigate('/dashboard')
-      } else {
-        alert('Feil: ' + (data.error || 'Ingen token eller brukerdata'))
+      if (!res.ok) {
+        return alert(data.message || 'Innlogging feilet.')
       }
+
+      if (!data.token || !data.user) {
+        return alert('Ugyldig respons fra server.')
+      }
+
+      if (data.user.role !== 'admin') {
+        return alert('Du har ikke administratorrettigheter.')
+      }
+
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      alert('Innlogging vellykket!')
+      navigate('/admin')
     } catch (err) {
-      console.error('Nettverksfeil eller annen feil:', err)
-      alert('Nettverksfeil')
+      console.error(err)
+      alert('Tilkoblingsfeil eller serverfeil.')
     }
   }
 
   return (
     <div className="container mt-4">
-      <h2>Logg inn som bruker</h2>
-      <form onSubmit={handleLogin}>
+      <h2>Admin innlogging</h2>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">E-post</label>
           <input
@@ -52,6 +55,7 @@ function Login() {
             autoComplete="email"
           />
         </div>
+
         <div className="mb-3">
           <label className="form-label">Passord</label>
           <input
@@ -63,20 +67,11 @@ function Login() {
             autoComplete="current-password"
           />
         </div>
-        <button type="submit" className="btn btn-primary">Logg inn</button>
+
+        <button type="submit" className="btn btn-danger">Logg inn som admin</button>
       </form>
-
-      <hr />
-
-      <p>Har du ikke bruker?</p>
-      <button
-        className="btn btn-outline-secondary"
-        onClick={() => navigate('/register')}
-      >
-        Registrer deg
-      </button>
     </div>
   )
 }
 
-export default Login
+export default AdminLogin
