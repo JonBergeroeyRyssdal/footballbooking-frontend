@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function OwnerRegister() {
   const [formData, setFormData] = useState({
@@ -8,12 +9,14 @@ function OwnerRegister() {
     confirmPassword: '',
   })
 
+  const navigate = useNavigate()
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (formData.password !== formData.confirmPassword) {
@@ -21,9 +24,29 @@ function OwnerRegister() {
       return
     }
 
-    // Senere: send `formData` til backend her
-    console.log('Sendes til server:', formData)
-    alert('Registrert! (simulert)')
+    try {
+      const res = await fetch('http://localhost:5000/api/owners/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert('Registrert som baneier!')
+        navigate('/owner/login') // 👈 Naviger etter vellykket registrering
+      } else {
+        alert(data.message || 'Noe gikk galt.')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Feil ved tilkobling til server.')
+    }
   }
 
   return (
@@ -85,4 +108,6 @@ function OwnerRegister() {
 }
 
 export default OwnerRegister
+
+
 
