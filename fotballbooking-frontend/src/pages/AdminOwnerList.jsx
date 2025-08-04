@@ -1,3 +1,4 @@
+// src/pages/AdminOwnerList.jsx
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
@@ -5,9 +6,21 @@ function AdminOwnerList() {
   const [owners, setOwners] = useState([])
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/admin/owners')
-      .then(res => setOwners(res.data))
-      .catch(err => console.error('Feil ved henting av eiere:', err))
+    const fetchOwners = async () => {
+      try {
+        const token = localStorage.getItem('token') // Hent JWT-token
+        const res = await axios.get('http://localhost:5000/api/admin/owners', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Legg til token i header
+          },
+        })
+        setOwners(res.data)
+      } catch (err) {
+        console.error('Feil ved henting av eiere:', err)
+      }
+    }
+
+    fetchOwners()
   }, [])
 
   return (
@@ -38,3 +51,4 @@ function AdminOwnerList() {
 }
 
 export default AdminOwnerList
+

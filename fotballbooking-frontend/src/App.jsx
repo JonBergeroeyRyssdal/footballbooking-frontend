@@ -36,7 +36,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/owner/mypitches" element={<MyPitches />} />
           <Route path="/owner/mypitches/:id" element={<PitchDetail />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin/dashboard" element={<AdminPanel />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/mybookings" element={<MyBookings />} />

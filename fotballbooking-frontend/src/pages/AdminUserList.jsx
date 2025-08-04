@@ -1,3 +1,4 @@
+// src/pages/AdminUserList.jsx
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
@@ -5,9 +6,21 @@ function AdminUserList() {
   const [users, setUsers] = useState([])
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/admin/users')
-      .then(res => setUsers(res.data))
-      .catch(err => console.error('Feil ved henting av brukere:', err))
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('token') // Hent JWT-token
+        const res = await axios.get('http://localhost:5000/api/admin/users', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Legg til i header
+          },
+        })
+        setUsers(res.data)
+      } catch (err) {
+        console.error('Feil ved henting av brukere:', err)
+      }
+    }
+
+    fetchUsers()
   }, [])
 
   return (
@@ -40,3 +53,4 @@ function AdminUserList() {
 }
 
 export default AdminUserList
+

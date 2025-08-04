@@ -33,7 +33,7 @@ function AdminLogin() {
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
       alert('Innlogging vellykket!')
-      navigate('/admin')
+      navigate('/admin/dashboard') // ✅ Endret rute her
     } catch (err) {
       console.error(err)
       alert('Tilkoblingsfeil eller serverfeil.')
@@ -89,4 +89,5 @@ function AdminLogin() {
 }
 
 export default AdminLogin
+
 
