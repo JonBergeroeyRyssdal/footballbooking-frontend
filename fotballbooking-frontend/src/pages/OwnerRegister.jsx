@@ -39,7 +39,7 @@ function OwnerRegister() {
 
       if (res.ok) {
         alert('Registrert som baneier!')
-        navigate('/owner/login') // 👈 Naviger etter vellykket registrering
+        navigate('/owner/login')
       } else {
         alert(data.message || 'Noe gikk galt.')
       }
@@ -50,59 +50,73 @@ function OwnerRegister() {
   }
 
   return (
-    <div className="container">
-      <h2 className="mb-4">Registrer deg som baneier</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Navn</label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card shadow-sm">
+            <div className="card-header bg-success text-white text-center">
+              <h4 className="mb-0">🏟️ Registrer deg som baneier</h4>
+            </div>
+            <div className="card-body">
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label className="form-label">Navn</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
-        <div className="mb-3">
-          <label className="form-label">E-post</label>
-          <input
-            type="email"
-            className="form-control"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+                <div className="mb-3">
+                  <label className="form-label">E-post</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
-        <div className="mb-3">
-          <label className="form-label">Passord</label>
-          <input
-            type="password"
-            className="form-control"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+                <div className="mb-3">
+                  <label className="form-label">Passord</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
-        <div className="mb-3">
-          <label className="form-label">Bekreft passord</label>
-          <input
-            type="password"
-            className="form-control"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
+                <div className="mb-3">
+                  <label className="form-label">Bekreft passord</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
-        <button type="submit" className="btn btn-success">Registrer</button>
-      </form>
+                <div className="d-grid">
+                  <button type="submit" className="btn btn-success">
+                    Registrer
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

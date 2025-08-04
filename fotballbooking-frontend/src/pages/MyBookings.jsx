@@ -16,29 +16,40 @@ function MyBookings() {
     }
   ]
 
+  const getStatusBadge = (status) => {
+    if (status === 'Bekreftet') return <span className="badge bg-success">{status}</span>
+    if (status === 'Avventer') return <span className="badge bg-warning text-dark">{status}</span>
+    return <span className="badge bg-secondary">{status}</span>
+  }
+
   return (
-    <div className="container mt-4">
-      <h2>Mine bookinger</h2>
+    <div className="container mt-5">
+      <h2 className="mb-4">Mine bookinger</h2>
 
       {bookings.length > 0 ? (
-        bookings.map(booking => (
-          <div key={booking.id} className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">{booking.pitchName}</h5>
-              <p className="card-text">
-                Dato: {booking.date} <br />
-                Klokkeslett: {booking.time} <br />
-                Status: {booking.status}
-              </p>
-              <button className="btn btn-outline-danger">Avbestill</button>
+        <div className="row g-4">
+          {bookings.map((booking) => (
+            <div key={booking.id} className="col-md-6">
+              <div className="card shadow-sm">
+                <div className="card-header bg-light fw-bold">{booking.pitchName}</div>
+                <div className="card-body">
+                  <p className="card-text mb-2">
+                    <strong>Dato:</strong> {booking.date}<br />
+                    <strong>Klokkeslett:</strong> {booking.time}<br />
+                    <strong>Status:</strong> {getStatusBadge(booking.status)}
+                  </p>
+                  <button className="btn btn-outline-danger btn-sm">Avbestill</button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       ) : (
-        <p>Du har ingen bookinger enda.</p>
+        <div className="alert alert-info">Du har ingen bookinger enda.</div>
       )}
     </div>
   )
 }
 
 export default MyBookings
+

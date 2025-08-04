@@ -36,7 +36,7 @@ function LoginUser() {
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
       console.log('Token og bruker lagret')
-      navigate('/dashboard')
+      navigate('/user/dashboard')
     } catch (err) {
       console.error('Nettverksfeil eller annen feil:', err)
       alert('Nettverksfeil')

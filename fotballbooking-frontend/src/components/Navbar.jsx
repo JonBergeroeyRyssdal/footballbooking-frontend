@@ -1,13 +1,31 @@
-// src/components/Navbar.jsx
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
 function Navbar() {
+  const [user, setUser] = useState(null)
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    } else {
+      setUser(null)
+    }
+  }, [location]) // Oppdater ved rutenavigasjon
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    setUser(null)
+    navigate('/', { state: { loggedOut: true } })
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
       <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
-          Fotballbooking
-        </Link>
+        <Link className="navbar-brand fw-bold" to="/">Fotballbooking</Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -22,7 +40,6 @@ function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-
             <li className="nav-item">
               <Link className="nav-link" to="/">Hjem</Link>
             </li>
@@ -35,40 +52,71 @@ function Navbar() {
             <li className="nav-item">
               <Link className="nav-link" to="/contact">Kontakt</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/profile">Min profil</Link>
-            </li>
 
-            {/* Dropdown: Bruker */}
-            <li className="nav-item dropdown">
-              <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
-                Bruker
-              </span>
-              <ul className="dropdown-menu">
-                <li><Link className="dropdown-item" to="/loginuser">Logg inn</Link></li>
-                <li><Link className="dropdown-item" to="/user/register">Registrer</Link></li>
-                <li><Link className="dropdown-item" to="/dashboard">Dashboard</Link></li>
-                <li><Link className="dropdown-item" to="/mybookings">Mine bookinger</Link></li>
-              </ul>
-            </li>
+            {/* Ikke innlogget */}
+            {!user && (
+              <>
+                <li className="nav-item dropdown">
+                  <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                    Bruker
+                  </span>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/loginuser">Logg inn</Link></li>
+                    <li><Link className="dropdown-item" to="/user/register">Registrer</Link></li>
+                  </ul>
+                </li>
+                <li className="nav-item dropdown">
+                  <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                    Eier
+                  </span>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/owner/login">Logg inn</Link></li>
+                    <li><Link className="dropdown-item" to="/owner/register">Registrer</Link></li>
+                  </ul>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/admin/login">Admin</Link>
+                </li>
+              </>
+            )}
 
-            {/* Dropdown: Eier */}
-            <li className="nav-item dropdown">
-              <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
-                Eier
-              </span>
-              <ul className="dropdown-menu">
-                <li><Link className="dropdown-item" to="/owner/login">Logg inn</Link></li>
-                <li><Link className="dropdown-item" to="/owner/register">Registrer</Link></li>
-                <li><Link className="dropdown-item" to="/owner/dashboard">Dashboard</Link></li>
-              </ul>
-            </li>
+            {/* Innlogget tenant */}
+            {user && user.role === 'tenant' && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/user/dashboard">Dashboard</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/mybookings">Mine bookinger</Link>
+                </li>
+              </>
+            )}
 
-            {/* Admin */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/admin/login">Admin</Link>
-            </li>
+            {/* Innlogget owner */}
+            {user && user.role === 'owner' && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/owner/dashboard">Dashboard</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/owner/add-pitch">Add Pitch</Link>
+                </li>
+              </>
+            )}
 
+            {/* Innlogget admin */}
+            {user && user.role === 'admin' && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin/dashboard">Adminpanel</Link>
+              </li>
+            )}
+
+            {/* Felles logg ut-knapp for alle roller */}
+            {user && (
+              <li className="nav-item">
+                <button onClick={handleLogout} className="btn btn-outline-danger ms-2">Logg ut</button>
+              </li>
+            )}
           </ul>
         </div>
       </div>
@@ -77,3 +125,4 @@ function Navbar() {
 }
 
 export default Navbar
+

@@ -1,13 +1,42 @@
 function AdminPanel() {
   return (
-    <div className="container mt-4">
-      <h2>Admin-panel</h2>
-      <ul>
-        <li>Antall brukere: 124</li>
-        <li>Antall eiere: 23</li>
-        <li>Rapporterte problemer: 0</li>
-      </ul>
-      <button className="btn btn-danger">Suspender bruker</button>
+    <div className="container mt-5">
+      <h2 className="mb-4">🛠️ Admin-panel</h2>
+
+      <div className="row g-4">
+        <div className="col-md-4">
+          <div className="card shadow-sm">
+            <div className="card-body text-center">
+              <h5 className="card-title">👥 Brukere</h5>
+              <p className="display-6 fw-bold">124</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="card shadow-sm">
+            <div className="card-body text-center">
+              <h5 className="card-title">🏟️ Eiendomseiere</h5>
+              <p className="display-6 fw-bold">23</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="card shadow-sm">
+            <div className="card-body text-center">
+              <h5 className="card-title">🚨 Rapporter</h5>
+              <p className="display-6 fw-bold text-success">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 text-center">
+        <button className="btn btn-outline-danger btn-lg">
+          🚫 Suspender bruker
+        </button>
+      </div>
     </div>
   )
 }
