@@ -17,7 +17,9 @@ import UserDashboard from "./pages/UserDashboard";
 import MyBookings from "./pages/MyBookings";
 import AdminLogin from "./pages/AdminLogin";
 import Navbar from "./components/Navbar";
-import AddPitch from './pages/AddPitch'
+import AddPitch from './pages/AddPitch';
+import AdminUserList from './pages/AdminUserList';
+import AdminOwnerList from './pages/AdminOwnerList'
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
           <Route path="/book" element={<Booking />} />
           <Route path="/owner/add-pitch" element={<AddPitch />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/admin/users" element={<AdminUserList />} />
+          <Route path="/admin/owners" element={<AdminOwnerList />} />
         </Routes>
       </div>
     </>
