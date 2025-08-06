@@ -1,5 +1,5 @@
 // src/pages/PitchDetail.jsx
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
@@ -42,6 +42,10 @@ function PitchDetail() {
 
   return (
     <div className="container mt-5">
+      <Link to="/owner/dashboard" className="btn btn-outline-secondary mb-3">
+        ⬅ Tilbake til eierpanelet
+      </Link>
+
       <h2>{pitch.name}</h2>
       <p><strong>Størrelse:</strong> {pitch.size}</p>
       <p><strong>Lokasjon:</strong> {pitch.location}</p>
@@ -69,5 +73,6 @@ function PitchDetail() {
 }
 
 export default PitchDetail
+
 
 

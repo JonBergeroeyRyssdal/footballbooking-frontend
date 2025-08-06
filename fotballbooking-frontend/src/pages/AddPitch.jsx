@@ -20,6 +20,23 @@ function AddPitch() {
     setFormData(prev => ({ ...prev, [name]: newValue }))
   }
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // Valgfri begrensning på størrelse (f.eks. 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Bildet er for stort (maks 2MB).")
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setFormData(prev => ({ ...prev, image: reader.result }))
+    }
+    reader.readAsDataURL(file)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const token = localStorage.getItem('token')
@@ -94,8 +111,8 @@ function AddPitch() {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Bilde-URL</label>
-          <input type="text" className="form-control" name="image" value={formData.image} onChange={handleChange} />
+          <label className="form-label">Last opp bilde</label>
+          <input type="file" className="form-control" accept="image/*" onChange={handleImageUpload} />
         </div>
 
         <button type="submit" className="btn btn-success">Lagre bane</button>
@@ -105,4 +122,5 @@ function AddPitch() {
 }
 
 export default AddPitch
+
 
