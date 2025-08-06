@@ -1,36 +1,73 @@
+// src/pages/PitchDetail.jsx
 import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
 
 function PitchDetail() {
   const { id } = useParams()
+  const [pitch, setPitch] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(new Date())
 
-  // Dummy booking- og tilgjengelighetsinfo
-  const dummyPitch = {
-    id,
-    name: 'Majorstua Kunstgress',
-    bookings: ['2025-07-01 18:00', '2025-07-03 19:00'],
-    availableTimes: ['17:00', '18:00', '19:00'],
-    availableDates: ['2025-07-01', '2025-07-02', '2025-07-03']
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+
+    const fetchPitch = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/pitches/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        if (!res.ok) throw new Error('Kunne ikke hente baneinformasjon')
+
+        const data = await res.json()
+        setPitch(data)
+      } catch (error) {
+        console.error(error)
+        alert('Feil ved henting av bane')
+      }
+    }
+
+    fetchPitch()
+  }, [id])
+
+  const handleDateClick = (date) => {
+    setSelectedDate(date)
+    // Fremtidig: hent tilgjengelighet/booking for valgt dato
   }
 
+  if (!pitch) return <p>Laster baneinformasjon ...</p>
+
   return (
-    <div className="container mt-4">
-      <h2>Detaljer for {dummyPitch.name}</h2>
-      <h4>Bookede tider:</h4>
-      <ul>
-        {dummyPitch.bookings.map((booking, index) => (
-          <li key={index}>{booking}</li>
-        ))}
-      </ul>
+    <div className="container mt-5">
+      <h2>{pitch.name}</h2>
+      <p><strong>Størrelse:</strong> {pitch.size}</p>
+      <p><strong>Lokasjon:</strong> {pitch.location}</p>
+      <p><strong>Dekke:</strong> {pitch.surface || 'Ikke oppgitt'}</p>
+      <p><strong>Garderober:</strong> {pitch.hasLockerRoom ? 'Ja' : 'Nei'}</p>
+      <p><strong>Pris per time:</strong> {pitch.price ? `${pitch.price} kr` : 'Ikke satt'}</p>
 
-      <h4>Tilgjengelige tider:</h4>
-      <p>{dummyPitch.availableTimes.join(', ')}</p>
+      {pitch.image && (
+        <img
+          src={pitch.image}
+          alt="Bilde av banen"
+          className="img-fluid mb-3"
+          style={{ maxHeight: '300px', objectFit: 'cover' }}
+        />
+      )}
 
-      <h4>Tilgjengelige datoer:</h4>
-      <p>{dummyPitch.availableDates.join(', ')}</p>
+      <h4 className="mt-4">📅 Kalender – velg dato for tilgjengelighet</h4>
+      <Calendar value={selectedDate} onClickDay={handleDateClick} />
 
-      <button className="btn btn-warning mt-3">Rediger tilgjengelighet (kommer)</button>
+      <div className="mt-4">
+        <button className="btn btn-warning mt-3">Rediger tilgjengelighet (kommer)</button>
+      </div>
     </div>
   )
 }
 
 export default PitchDetail
+
+
