@@ -20,6 +20,7 @@ import Navbar from "./components/Navbar";
 import AddPitch from './pages/AddPitch';
 import AdminUserList from './pages/AdminUserList';
 import AdminOwnerList from './pages/AdminOwnerList'
+import AdminPitchList from "./pages/AdminPitchList";
 
 function App() {
   return (
@@ -46,6 +47,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/admin/users" element={<AdminUserList />} />
           <Route path="/admin/owners" element={<AdminOwnerList />} />
+          <Route path="/admin/pitches" element={<AdminPitchList />} />
+
         </Routes>
       </div>
     </>

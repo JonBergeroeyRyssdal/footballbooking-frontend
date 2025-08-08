@@ -4,7 +4,7 @@ import axios from 'axios'
 
 function AdminPanel() {
   const navigate = useNavigate()
-  const [counts, setCounts] = useState({ userCount: 0, ownerCount: 0 })
+  const [counts, setCounts] = useState({ userCount: 0, ownerCount: 0, pitchCount: 0 })
 
   useEffect(() => {
     const fetchCounts = async () => {
@@ -54,10 +54,14 @@ function AdminPanel() {
         </div>
 
         <div className="col-md-4">
-          <div className="card shadow-sm">
+          <div
+            className="card shadow-sm"
+            onClick={() => navigate('/admin/pitches')}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="card-body text-center">
-              <h5 className="card-title">🚨 Rapporter</h5>
-              <p className="display-6 fw-bold text-success">0</p>
+              <h5 className="card-title">⚽ Baner</h5>
+              <p className="display-6 fw-bold">{counts.pitchCount}</p>
             </div>
           </div>
         </div>
@@ -71,4 +75,5 @@ function AdminPanel() {
 }
 
 export default AdminPanel
+
 
