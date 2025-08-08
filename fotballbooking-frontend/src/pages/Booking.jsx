@@ -96,12 +96,24 @@ function Booking() {
           {filteredPitches.map(pitch => (
             <div key={pitch.id} className="col-md-6">
               <div className="card shadow-sm h-100">
+                {pitch.image && (
+                  <img
+                    src={pitch.image.startsWith('data:image') ? pitch.image : pitch.image}
+                    alt={pitch.name}
+                    className="card-img-top"
+                    style={{ maxHeight: '200px', objectFit: 'cover' }}
+                  />
+                )}
                 <div className="card-body d-flex flex-column justify-content-between">
                   <div>
                     <h5 className="card-title">{pitch.name}</h5>
                     <p className="card-text">
                       <strong>By:</strong> {pitch.location}<br />
                       <strong>Størrelse:</strong> {pitch.size}<br />
+                      <strong>Pris:</strong> {pitch.price} kr<br />
+                      <strong>Underlag:</strong> {pitch.surface}<br />
+                      <strong>Garderobe:</strong> {pitch.hasLockerRoom ? 'Ja' : 'Nei'}<br />
+                      <strong>Eier:</strong> {pitch.ownerName}
                     </p>
                   </div>
                   <div className="mt-3">
