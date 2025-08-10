@@ -77,14 +77,26 @@ function Home() {
             <div className="col-md-4" key={pitch.id}>
               <div className="card h-100 shadow-sm">
                 <img
-                  src={`https://source.unsplash.com/400x250/?football,pitch,${pitch.location}`}
+                  src={
+                    pitch.image
+                      ? pitch.image.startsWith('data:image') 
+                        ? pitch.image
+                        : pitch.image // if it's a regular URL
+                      : `https://source.unsplash.com/400x250/?football,pitch,${pitch.location}`
+                  }
                   className="card-img-top"
                   alt={pitch.name}
+                  style={{ maxHeight: '200px', objectFit: 'cover' }}
                 />
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{pitch.name}</h5>
-                  <p className="card-text text-muted">
-                    {pitch.location}, {pitch.size} – tilgjengelig for booking.
+                  <p className="card-text text-muted mb-2">
+                    📍 <strong>Sted:</strong> {pitch.location}<br />
+                    📐 <strong>Størrelse:</strong> {pitch.size}<br />
+                    💰 <strong>Pris:</strong> {pitch.price} kr<br />
+                    🟫 <strong>Underlag:</strong> {pitch.surface}<br />
+                    🚿 <strong>Garderobe:</strong> {pitch.hasLockerRoom ? 'Ja' : 'Nei'}<br />
+                    👤 <strong>Eier:</strong> {pitch.ownerName}
                   </p>
                   <Link to="/book" className="mt-auto btn btn-outline-primary">
                     Se tilgjengelighet
@@ -109,3 +121,4 @@ function Home() {
 }
 
 export default Home
+
