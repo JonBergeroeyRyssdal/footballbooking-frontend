@@ -41,6 +41,32 @@ function hoursRange(start = 7, end = 22, stepMins = 60) {
 
 const dtfWeekday = new Intl.DateTimeFormat('nb-NO', { weekday: 'short' })
 const dtfDate = new Intl.DateTimeFormat('nb-NO', { day: '2-digit', month: '2-digit' })
+const dtfShort = new Intl.DateTimeFormat('nb-NO', { day: '2-digit', month: '2-digit' })
+
+// ISO-ukenummer for en gitt dato (mandag-basert)
+function getISOWeek(d) {
+  // Bruk UTC for å unngå DST-problemer
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()))
+  const dayNum = (date.getUTCDay() + 6) % 7 // 0=mandag
+  // Flytt til torsdag i samme uke (ISO referansedag)
+  date.setUTCDate(date.getUTCDate() - dayNum + 3)
+
+  // Finn første torsdag i ISO-året
+  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4))
+  const firstDayNum = (firstThursday.getUTCDay() + 6) % 7
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - firstDayNum + 3)
+
+  // Ukenummer og ISO-år
+  const weekNo = 1 + Math.round((date - firstThursday) / (7 * 24 * 3600 * 1000))
+  const isoYear = date.getUTCFullYear()
+  return { week: weekNo, isoYear }
+}
+
+function weekRangeLabel(weekStart) {
+  const monday = new Date(weekStart)
+  const sunday = new Date(weekStart); sunday.setDate(sunday.getDate() + 6)
+  return `${dtfShort.format(monday)}–${dtfShort.format(sunday)}`
+}
 
 function PitchDetail() {
   const { id } = useParams()
@@ -70,6 +96,10 @@ function PitchDetail() {
   const weekDays = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart])
   const timeSlots = useMemo(() => hoursRange(7, 22, 60), []) // juster step til 30 for halvtime
 
+  // Ukenummer og visningsrange for aktiv uke
+  const { week: isoWeek, isoYear } = useMemo(() => getISOWeek(weekStart), [weekStart])
+  const rangeLabel = useMemo(() => weekRangeLabel(weekStart), [weekStart])
+
   const toggleSlot = (isoDate, label) => {
     const key = `${isoDate}|${label}`
     setSelectedSlots(prev => {
@@ -98,7 +128,7 @@ function PitchDetail() {
     // Her sender vi timeslots enkeltvis; på server kan du slå sammen sammenhengende perioder.
     const payload = Array.from(selectedSlots).map(key => {
       const [date, time] = key.split('|')
-      return { date, start: time, end: time } // eller utvid til faktisk sluttid
+      return { date, start: time, end: time } // utvid gjerne til faktisk sluttid ved 30/60-min slots
     })
 
     try {
@@ -204,7 +234,12 @@ function PitchDetail() {
       )}
 
       <div className="d-flex align-items-center justify-content-between mb-2">
-        <h4 className="mb-0">📅 Tilgjengelighetsrutenett (ukevis)</h4>
+        <div className="d-flex align-items-baseline gap-3">
+          <h4 className="mb-0">📅 Tilgjengelighetsrutenett (ukevis)</h4>
+          <span className="text-muted">
+            Uke {isoWeek}, {isoYear} · {rangeLabel}
+          </span>
+        </div>
         <div className="btn-group">
           <button className="btn btn-outline-secondary" onClick={goPrevWeek}>← Forrige uke</button>
           <button className="btn btn-outline-secondary" onClick={goThisWeek}>I dag</button>
@@ -274,6 +309,7 @@ function PitchDetail() {
 }
 
 export default PitchDetail
+
 
 
 
