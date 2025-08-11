@@ -26,6 +26,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
       <div className="container">
         <Link className="navbar-brand fw-bold" to="/">Fotballbooking</Link>
+
         <button
           className="navbar-toggler"
           type="button"
@@ -40,11 +41,13 @@ function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+            {/* Public */}
             <li className="nav-item">
               <Link className="nav-link" to="/">Hjem</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/book">Leie</Link>
+              {/* Hvis du heller vil ha en søkeside senere, bytt til f.eks. /search */}
+              <Link className="nav-link" to="/user/book">Leie</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/about">Om oss</Link>
@@ -61,10 +64,11 @@ function Navbar() {
                     Bruker
                   </span>
                   <ul className="dropdown-menu">
-                    <li><Link className="dropdown-item" to="/loginuser">Logg inn</Link></li>
+                    <li><Link className="dropdown-item" to="/user/login">Logg inn</Link></li>
                     <li><Link className="dropdown-item" to="/user/register">Registrer</Link></li>
                   </ul>
                 </li>
+
                 <li className="nav-item dropdown">
                   <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
                     Eier
@@ -74,6 +78,7 @@ function Navbar() {
                     <li><Link className="dropdown-item" to="/owner/register">Registrer</Link></li>
                   </ul>
                 </li>
+
                 <li className="nav-item">
                   <Link className="nav-link" to="/admin/login">Admin</Link>
                 </li>
@@ -81,13 +86,13 @@ function Navbar() {
             )}
 
             {/* Innlogget tenant */}
-            {user && user.role === 'tenant' && (
+            {user && user.role === 'user' && (
               <>
                 <li className="nav-item">
                   <Link className="nav-link" to="/user/dashboard">Dashboard</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/mybookings">Mine bookinger</Link>
+                  <Link className="nav-link" to="/user/bookings">Mine bookinger</Link>
                 </li>
               </>
             )}
@@ -99,7 +104,10 @@ function Navbar() {
                   <Link className="nav-link" to="/owner/dashboard">Dashboard</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/owner/add-pitch">Add Pitch</Link>
+                  <Link className="nav-link" to="/owner/pitches">Mine baner</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/owner/pitches/add">Legg til bane</Link>
                 </li>
               </>
             )}
@@ -107,7 +115,7 @@ function Navbar() {
             {/* Innlogget admin */}
             {user && user.role === 'admin' && (
               <li className="nav-item">
-                <Link className="nav-link" to="/admin/dashboard">Adminpanel</Link>
+                <Link className="nav-link" to="/admin">Adminpanel</Link>
               </li>
             )}
 
@@ -125,4 +133,6 @@ function Navbar() {
 }
 
 export default Navbar
+
+
 

@@ -63,7 +63,7 @@ function OwnerDashboard() {
           {pitches.map(pitch => (
             <div key={pitch.id} className="col-md-6">
               <div className="card shadow-sm h-100">
-                <Link to={`/owner/mypitches/${pitch.id}`} className="card-body text-decoration-none text-dark">
+                <Link to={`/owner/pitches/${pitch.id}`} className="card-body text-decoration-none text-dark">
                   <h5 className="card-title">{pitch.name}</h5>
                   <p className="card-text">
                     <strong>Størrelse:</strong> {pitch.size}<br />

@@ -1,33 +1,37 @@
-import { Link, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function Home() {
-  const [featuredPitches, setFeaturedPitches] = useState([])
-  const location = useLocation()
-  const [showLoggedOut, setShowLoggedOut] = useState(location.state?.loggedOut || false)
+  const [featuredPitches, setFeaturedPitches] = useState([]);
+  const location = useLocation();
+  const [showLoggedOut, setShowLoggedOut] = useState(
+    location.state?.loggedOut || false
+  );
 
   // Skjul utloggingsmelding etter 3 sekunder
   useEffect(() => {
     if (showLoggedOut) {
-      const timer = setTimeout(() => setShowLoggedOut(false), 3000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setShowLoggedOut(false), 3000);
+      return () => clearTimeout(timer);
     }
-  }, [showLoggedOut])
+  }, [showLoggedOut]);
 
   // Hent utvalgte baner fra backend
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/pitches/featured')
-        setFeaturedPitches(res.data)
+        const res = await axios.get(
+          "http://localhost:5000/api/pitches/featured"
+        );
+        setFeaturedPitches(res.data);
       } catch (err) {
-        console.error('❌ Kunne ikke hente utvalgte baner:', err)
+        console.error("❌ Kunne ikke hente utvalgte baner:", err);
       }
-    }
+    };
 
-    fetchFeatured()
-  }, [])
+    fetchFeatured();
+  }, []);
 
   return (
     <div className="container py-5">
@@ -50,7 +54,11 @@ function Home() {
         <div className="row g-3">
           <div className="col-md-6">
             <label className="form-label">Sted</label>
-            <input type="text" className="form-control" placeholder="F.eks. Oslo, Bergen..." />
+            <input
+              type="text"
+              className="form-control"
+              placeholder="F.eks. Oslo, Bergen..."
+            />
           </div>
           <div className="col-md-6">
             <label className="form-label">Banestørrelse</label>
@@ -79,26 +87,35 @@ function Home() {
                 <img
                   src={
                     pitch.image
-                      ? pitch.image.startsWith('data:image') 
+                      ? pitch.image.startsWith("data:image")
                         ? pitch.image
                         : pitch.image // if it's a regular URL
                       : `https://source.unsplash.com/400x250/?football,pitch,${pitch.location}`
                   }
                   className="card-img-top"
                   alt={pitch.name}
-                  style={{ maxHeight: '200px', objectFit: 'cover' }}
+                  style={{ maxHeight: "200px", objectFit: "cover" }}
                 />
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{pitch.name}</h5>
                   <p className="card-text text-muted mb-2">
-                    📍 <strong>Sted:</strong> {pitch.location}<br />
-                    📐 <strong>Størrelse:</strong> {pitch.size}<br />
-                    💰 <strong>Pris:</strong> {pitch.price} kr<br />
-                    🟫 <strong>Underlag:</strong> {pitch.surface}<br />
-                    🚿 <strong>Garderobe:</strong> {pitch.hasLockerRoom ? 'Ja' : 'Nei'}<br />
+                    📍 <strong>Sted:</strong> {pitch.location}
+                    <br />
+                    📐 <strong>Størrelse:</strong> {pitch.size}
+                    <br />
+                    💰 <strong>Pris:</strong> {pitch.price} kr
+                    <br />
+                    🟫 <strong>Underlag:</strong> {pitch.surface}
+                    <br />
+                    🚿 <strong>Garderobe:</strong>{" "}
+                    {pitch.hasLockerRoom ? "Ja" : "Nei"}
+                    <br />
                     👤 <strong>Eier:</strong> {pitch.ownerName}
                   </p>
-                  <Link to="/book" className="mt-auto btn btn-outline-primary">
+                  <Link
+                    to={`/pitches/${pitch.id}`}
+                    className="mt-auto btn btn-outline-primary"
+                  >
                     Se tilgjengelighet
                   </Link>
                 </div>
@@ -117,8 +134,7 @@ function Home() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Home
-
+export default Home;

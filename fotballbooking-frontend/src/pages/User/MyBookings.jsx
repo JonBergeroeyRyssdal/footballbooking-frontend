@@ -1,20 +1,4 @@
 function MyBookings() {
-  const bookings = [
-    {
-      id: 1,
-      pitchName: 'Frogner Stadion',
-      date: '2025-07-01',
-      time: '18:00',
-      status: 'Bekreftet',
-    },
-    {
-      id: 2,
-      pitchName: 'Bislett Mini',
-      date: '2025-07-03',
-      time: '17:00',
-      status: 'Avventer',
-    }
-  ]
 
   const getStatusBadge = (status) => {
     if (status === 'Bekreftet') return <span className="badge bg-success">{status}</span>

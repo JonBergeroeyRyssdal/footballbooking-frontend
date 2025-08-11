@@ -20,24 +20,18 @@ function Booking() {
         console.error('❌ Feil ved henting av baner:', err)
       }
     }
-
     fetchPitches()
   }, [])
 
-  const handleBookClick = () => {
-    navigate('/loginuser') // Juster etter faktisk path
+  // Åpne banesiden (ingen innlogging tvunget her)
+  const handleBookClick = (id) => {
+    navigate(`/pitches/${id}`)
   }
 
-  const filteredPitches = allPitches.filter(pitch => {
-    return (
-      (!searchCity || pitch.location?.toLowerCase().includes(searchCity.toLowerCase())) &&
-      (!searchSize || pitch.size === searchSize)
-    )
-  })
-
-  console.log('📊 Antall baner hentet:', allPitches.length)
-  console.log('🔍 Antall baner etter filtrering:', filteredPitches.length)
-  console.log('🧪 Første bane (debug):', allPitches[0])
+  const filteredPitches = allPitches.filter(pitch => (
+    (!searchCity || pitch.location?.toLowerCase().includes(searchCity.toLowerCase())) &&
+    (!searchSize || pitch.size === searchSize)
+  ))
 
   return (
     <div className="container mt-5">
@@ -98,7 +92,7 @@ function Booking() {
               <div className="card shadow-sm h-100">
                 {pitch.image && (
                   <img
-                    src={pitch.image.startsWith('data:image') ? pitch.image : pitch.image}
+                    src={pitch.image}
                     alt={pitch.name}
                     className="card-img-top"
                     style={{ maxHeight: '200px', objectFit: 'cover' }}
@@ -117,7 +111,10 @@ function Booking() {
                     </p>
                   </div>
                   <div className="mt-3">
-                    <button className="btn btn-primary w-100" onClick={handleBookClick}>
+                    <button
+                      className="btn btn-primary w-100"
+                      onClick={() => handleBookClick(pitch.id)}
+                    >
                       📅 Book nå
                     </button>
                   </div>
@@ -134,6 +131,7 @@ function Booking() {
 }
 
 export default Booking
+
 
 
 
