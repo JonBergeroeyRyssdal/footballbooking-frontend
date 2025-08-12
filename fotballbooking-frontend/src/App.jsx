@@ -61,7 +61,7 @@ function App() {
 
         {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/admin/dashboard" element={<AdminPanel />} />
         <Route path="/admin/users" element={<AdminUserList />} />
         <Route path="/admin/owners" element={<AdminOwnerList />} />
         <Route path="/admin/pitches" element={<AdminPitchList />} />

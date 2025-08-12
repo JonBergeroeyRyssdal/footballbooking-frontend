@@ -52,7 +52,7 @@ function OwnerDashboard() {
     <div className="container mt-5">
       <h2 className="mb-4">🎯 Eierpanel</h2>
 
-      <Link to="/owner/add-pitch" className="btn btn-outline-primary mb-4">
+      <Link to="/owner/pitches/add" className="btn btn-outline-primary mb-4">
         ➕ Legg til ny bane
       </Link>
 

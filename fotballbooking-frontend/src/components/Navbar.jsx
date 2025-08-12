@@ -115,7 +115,7 @@ function Navbar() {
             {/* Innlogget admin */}
             {user && user.role === 'admin' && (
               <li className="nav-item">
-                <Link className="nav-link" to="/admin">Adminpanel</Link>
+                <Link className="nav-link" to="/admin/dashboard">Adminpanel</Link>
               </li>
             )}
 
